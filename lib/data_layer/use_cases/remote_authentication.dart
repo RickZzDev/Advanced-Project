@@ -9,7 +9,7 @@ import '../../domain/helpers/helpers.dart';
 import '../../domain/entities/entities.dart';
 import '../../data_layer/models/models.dart';
 
-class RemoteAuthentication {
+class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;
   final String url;
 
