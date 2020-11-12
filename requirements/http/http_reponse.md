@@ -4,7 +4,7 @@
 1. Request com verbo http válido (Post) ||CHECK||
 2. Passar nos headers o content type JSON ||CHECK||
 3. Chamar request com body correto ||CHECK||
-4. Ok - 200 e resposta com dados
+4. Ok - 200 e resposta com dados ||CHECK||
 5. No content - 204 e resposta sem dados
 
 
