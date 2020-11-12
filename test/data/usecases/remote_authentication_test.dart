@@ -1,30 +1,10 @@
 import 'package:faker/faker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:advancedProject/domain/usecases/authentication.dart';
-
-//Esta classe é a responsavel por receber o httpClient e a url para fazer a requisição em si
-class RemoteAuthentication {
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication({@required this.httpClient, @required this.url});
-  Future<void> auth(AuthenticationParams params) async {
-    final body = {"email": params.email, "password": params.secret};
-    await httpClient.request(url: url, method: 'post', body: body);
-  }
-}
-
-//Esta classe abstrata possui um método de request, porém como ela é abstrata não podemos instancia-la
-abstract class HttpClient {
-  Future<void> request({
-    @required String url,
-    @required String method,
-    Map body,
-  });
-}
+import 'package:advancedProject/data_layer/http/http.dart';
+import 'package:advancedProject/data_layer/use_cases/use_cases.dart';
+import 'package:advancedProject/domain/usecases/usecases.dart';
 
 //Aqui usamos o mockito para criar uma classe que implementa o httpClient
 class HttpClientSpy extends Mock implements HttpClient {}
