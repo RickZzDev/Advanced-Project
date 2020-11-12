@@ -161,4 +161,26 @@ void main() {
       expect(account.token, accessToken);
     },
   );
+
+  test(
+    "Should throw unexpected error  if htppClient return 200 with invalid data",
+    () async {
+      final accessToken = faker.guid.guid();
+      //O when será ativado justamente quando o request for chamado
+      //Após ele ser chamado, será lançado um HttpError
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async => {"invalid_key": "invalid_value"});
+      //Action
+      //Chamando o auth
+      final future = sut.auth(params);
+      //Assert
+      //Verifica se foi lançado um domain error
+      expect(future, throwsA(DomainError.unexpectedError));
+    },
+  );
 }
