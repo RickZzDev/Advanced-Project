@@ -17,11 +17,28 @@ void main() {
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
+
+  group("SHARED", () {
+    test(
+      "Should throw server error if invalid method is provided",
+      () async {
+        final future = sut.request(
+            url: url, method: 'invalid_method', body: {"any_key": "any_value"});
+
+        expect(future, throwsA(HttpError.serverError));
+      },
+    );
+  });
+
   group(
     "POST",
     () {
       PostExpectation mockRequest() => when(client.post(any,
           body: anyNamed("body"), headers: anyNamed("headers")));
+
+      void mockError() {
+        mockRequest().thenThrow(Exception());
+      }
 
       void mockResponse(int statusCode,
           {String body = '{"any_key":"any_value"}'}) {
@@ -126,6 +143,20 @@ void main() {
       test(
         "Should return badRequest error if post return 400",
         () async {
+          mockResponse(400, body: '');
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(future, throwsA(HttpError.badRequest));
+        },
+      );
+
+      test(
+        "Should return badRequest error if post return 400",
+        () async {
           mockResponse(400);
 
           final future = sut.request(
@@ -134,6 +165,81 @@ void main() {
           );
 
           expect(future, throwsA(HttpError.badRequest));
+        },
+      );
+      test(
+        "Should return unauthorized error 401",
+        () async {
+          mockResponse(401);
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(future, throwsA(HttpError.unauthorized));
+        },
+      );
+
+      test(
+        "Should return forbidden error 403",
+        () async {
+          mockResponse(403);
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(
+            future,
+            throwsA(HttpError.forbidden),
+          );
+        },
+      );
+
+      test(
+        "Should return not found error 404",
+        () async {
+          mockResponse(404);
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(
+            future,
+            throwsA(HttpError.notFound),
+          );
+        },
+      );
+
+      test(
+        "Should return serverError  if post return 500",
+        () async {
+          mockResponse(500);
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(future, throwsA(HttpError.serverError));
+        },
+      );
+
+      test(
+        "Should return serverError  if post throws",
+        () async {
+          mockError();
+
+          final future = sut.request(
+            url: url,
+            method: 'post',
+          );
+
+          expect(future, throwsA(HttpError.serverError));
         },
       );
     },

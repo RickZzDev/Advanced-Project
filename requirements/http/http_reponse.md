@@ -10,16 +10,16 @@
 
 >## Erros
 1. Bad Request - 400 ||CHECK||
-2. Unauthorized - 401
-3. Forbidden - 403
-4. Not found - 404
-5. Internal server error - 500
+2. Unauthorized - 401 ||CHECK||
+3. Forbidden - 403 ||CHECK||
+4. Not found - 404 ||CHECK||
+5. Internal server error - 500 ||CHECK||
 
->## Exceção - Status code diferente dos citados acima
+>## Exceção - Status code diferente dos citados acima  ||CHECK||
 1 Internal server error - 500
 
->## Exceção - Http request deu alguma exceção
+>## Exceção - Http request deu alguma exceção ||CHECK||
 1. Internal server error - 500
 
->## Exceção - Verbo http inválido
+>## Exceção - Verbo http inválido ||CHECK||
 1. internal server error - 500
