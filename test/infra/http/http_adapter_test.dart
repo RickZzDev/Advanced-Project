@@ -42,13 +42,19 @@ void main() {
   group(
     "POST",
     () {
+      PostExpectation mockRequest() => when(client.post(any,
+          body: anyNamed("body"), headers: anyNamed("headers")));
+      void mockResponse(int statusCode,
+          {String body = '{"any_key":"any_value"}'}) {
+        mockRequest().thenAnswer((_) async => Response(body, 200));
+      }
+
+      setUp(() {
+        mockResponse(200);
+      });
       test(
         "Should call post with correct values",
         () async {
-          when(client.post(any,
-                  body: anyNamed("body"), headers: anyNamed("headers")))
-              .thenAnswer(
-                  (_) async => Response('{"any_key":"any_value"}', 200));
           await sut.request(
               url: url, method: 'post', body: {"any_key": "any_value"});
 
