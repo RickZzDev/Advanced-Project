@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:advancedProject/data_layer/http/http.dart';
 import 'package:advancedProject/data_layer/use_cases/use_cases.dart';
 import 'package:advancedProject/domain/usecases/usecases.dart';
+import 'package:advancedProject/domain/helpers/helpers.dart';
 
 //Aqui usamos o mockito para criar uma classe que implementa o httpClient
 class HttpClientSpy extends Mock implements HttpClient {}
@@ -13,6 +14,8 @@ void main() {
   RemoteAuthentication sut;
   HttpClientSpy httpClient;
   String url;
+  AuthenticationParams params = AuthenticationParams(
+      email: faker.internet.email(), secret: faker.internet.password());
 
   setUp(() {
     //Instanciamos a classe Mockada
@@ -26,8 +29,6 @@ void main() {
   test(
     "Should call httpClient with corect values",
     () async {
-      final params = AuthenticationParams(
-          email: faker.internet.email(), secret: faker.internet.password());
       //Action
       //Chamando o auth
       await sut.auth(params);
@@ -44,6 +45,27 @@ void main() {
         ),
       );
       // expect(actual, matcher)
+    },
+  );
+
+  test(
+    "Should throw unexpected error if HttpClient returns 400",
+    () async {
+      //O when será ativado justamente quando o request for chamado
+      //Após ele ser chamado, será lançado um HttpError
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenThrow(HttpError.badRequest);
+      //Action
+      //Chamando o auth
+      final future = sut.auth(params);
+      //Assert
+      //Verifica se foi lançado um domain error
+      expect(future, throwsA(DomainError.unexpectedError));
     },
   );
 }

@@ -1,11 +1,11 @@
 //Esta classe é a responsavel por receber o httpClient e a url para fazer a requisição em si
 
-import 'package:advancedProject/domain/entities/account_entity.dart';
-import 'package:flutter/cupertino.dart';
-
-import 'package:advancedProject/domain/usecases/authentication.dart';
+import 'package:meta/meta.dart';
 
 import '../http/http_client.dart';
+import '../../domain/usecases/usecases.dart';
+import '../../data_layer/http/http.dart';
+import '../../domain/helpers/helpers.dart';
 
 class RemoteAuthentication {
   final HttpClient httpClient;
@@ -13,10 +13,14 @@ class RemoteAuthentication {
 
   RemoteAuthentication({@required this.httpClient, @required this.url});
   Future<void> auth(AuthenticationParams params) async {
-    await httpClient.request(
-        url: url,
-        method: 'post',
-        body: RemoteAuthenticationParams.fromDomain(params).toJson());
+    try {
+      await httpClient.request(
+          url: url,
+          method: 'post',
+          body: RemoteAuthenticationParams.fromDomain(params).toJson());
+    } on HttpError {
+      throw DomainError.unexpectedError;
+    }
   }
 }
 
