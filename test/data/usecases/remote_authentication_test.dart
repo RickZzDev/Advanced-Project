@@ -17,6 +17,22 @@ void main() {
   AuthenticationParams params = AuthenticationParams(
       email: faker.internet.email(), secret: faker.internet.password());
 
+  Map mockValidData() =>
+      {"accessToken": faker.guid.guid(), "name": faker.person.name()};
+
+  PostExpectation mockRequest() => when(httpClient.request(
+      url: anyNamed("url"),
+      method: anyNamed("method"),
+      body: anyNamed("body")));
+
+  void mockHttpData(Map data) {
+    mockRequest().thenAnswer((_) async => data);
+  }
+
+  void mockHttpError(HttpError error) {
+    mockRequest().thenThrow(error);
+  }
+
   setUp(() {
     //Instanciamos a classe Mockada
     httpClient = HttpClientSpy();
@@ -25,19 +41,11 @@ void main() {
     //Arrange
     //Intanciamos a classe que será testada e passamos os parâmetros
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
+    mockHttpData(mockValidData());
   });
   test(
     "Should call httpClient with corect values",
     () async {
-      final accessToken = faker.guid.guid();
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenAnswer((_) async =>
-          {"accessToken": accessToken, "name": faker.person.name()});
       //Action
       //Chamando o auth
       await sut.auth(params);
@@ -62,13 +70,7 @@ void main() {
     () async {
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenThrow(HttpError.badRequest);
+      mockHttpError(HttpError.badRequest);
       //Action
       //Chamando o auth
       final future = sut.auth(params);
@@ -83,13 +85,7 @@ void main() {
     () async {
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenThrow(HttpError.notFound);
+      mockHttpError(HttpError.notFound);
       //Action
       //Chamando o auth
       final future = sut.auth(params);
@@ -103,13 +99,7 @@ void main() {
     () async {
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenThrow(HttpError.unauthorized);
+      mockHttpError(HttpError.unauthorized);
       //Action
       //Chamando o auth
       final future = sut.auth(params);
@@ -124,13 +114,7 @@ void main() {
     () async {
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenThrow(HttpError.serverError);
+      mockHttpError(HttpError.serverError);
       //Action
       //Chamando o auth
       final future = sut.auth(params);
@@ -142,23 +126,16 @@ void main() {
   test(
     "Should return an AccountEntity if htppClient return 200",
     () async {
-      final accessToken = faker.guid.guid();
+      final validData = mockValidData();
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenAnswer((_) async =>
-          {"accessToken": accessToken, "name": faker.person.name()});
+      mockHttpData(validData);
       //Action
       //Chamando o auth
       final account = await sut.auth(params);
       //Assert
       //Verifica se foi lançado um domain error
-      expect(account.token, accessToken);
+      expect(account.token, validData['accessToken']);
     },
   );
 
@@ -168,13 +145,8 @@ void main() {
       final accessToken = faker.guid.guid();
       //O when será ativado justamente quando o request for chamado
       //Após ele ser chamado, será lançado um HttpError
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenAnswer((_) async => {"invalid_key": "invalid_value"});
+      mockHttpData({"invalid_key": "invalid_value"});
+
       //Action
       //Chamando o auth
       final future = sut.auth(params);
