@@ -47,10 +47,8 @@ void main() {
     "Should call httpClient with corect values",
     () async {
       //Action
-      //Chamando o auth
       await sut.auth(params);
       //Assert
-      //Verificando se o request foi chamada com a url passada
       verify(
         httpClient.request(
           url: url,
@@ -61,21 +59,17 @@ void main() {
           },
         ),
       );
-      // expect(actual, matcher)
     },
   );
 
   test(
     "Should throw unexpected error if HttpClient returns 400",
     () async {
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpError(HttpError.badRequest);
       //Action
-      //Chamando o auth
       final future = sut.auth(params);
       //Assert
-      //Verifica se foi lançado um domain error
       expect(future, throwsA(DomainError.unexpectedError));
     },
   );
@@ -83,28 +77,22 @@ void main() {
   test(
     "Should throw unexpected error if HttpClient returns 404",
     () async {
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpError(HttpError.notFound);
       //Action
-      //Chamando o auth
       final future = sut.auth(params);
       //Assert
-      //Verifica se foi lançado um domain error
       expect(future, throwsA(DomainError.unexpectedError));
     },
   );
   test(
     "Should throw invalid credentials error if HttpClient returns 401",
     () async {
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpError(HttpError.unauthorized);
       //Action
-      //Chamando o auth
       final future = sut.auth(params);
       //Assert
-      //Verifica se foi lançado um domain error
       expect(future, throwsA(DomainError.invalidCredentials));
     },
   );
@@ -112,14 +100,11 @@ void main() {
   test(
     "Should throw unexpected error if HttpClient returns 500",
     () async {
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpError(HttpError.serverError);
       //Action
-      //Chamando o auth
       final future = sut.auth(params);
       //Assert
-      //Verifica se foi lançado um domain error
       expect(future, throwsA(DomainError.unexpectedError));
     },
   );
@@ -127,14 +112,11 @@ void main() {
     "Should return an AccountEntity if htppClient return 200",
     () async {
       final validData = mockValidData();
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpData(validData);
       //Action
-      //Chamando o auth
       final account = await sut.auth(params);
       //Assert
-      //Verifica se foi lançado um domain error
       expect(account.token, validData['accessToken']);
     },
   );
@@ -142,16 +124,11 @@ void main() {
   test(
     "Should throw unexpected error  if htppClient return 200 with invalid data",
     () async {
-      final accessToken = faker.guid.guid();
-      //O when será ativado justamente quando o request for chamado
-      //Após ele ser chamado, será lançado um HttpError
+      //Arrange
       mockHttpData({"invalid_key": "invalid_value"});
-
-      //Action
-      //Chamando o auth
+      //ACTION
       final future = sut.auth(params);
-      //Assert
-      //Verifica se foi lançado um domain error
+      //ASSERT
       expect(future, throwsA(DomainError.unexpectedError));
     },
   );

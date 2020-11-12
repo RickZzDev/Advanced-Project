@@ -12,20 +12,38 @@ class HttpAdapter {
 
   HttpAdapter(this.client);
   Future<void> request({@required String url, @required String method}) async {
-    client.post(url);
+    final headers = {
+      'content-type': 'application/json',
+      'accept': 'application/json',
+    };
+    client.post(url, headers: headers);
   }
 }
 
 void main() {
-  group("POST", () {
-    test("Should call post with correct values", () async {
-      final client = ClientSpy();
-      final sut = HttpAdapter(client);
-      final url = faker.internet.httpUrl();
+  group(
+    "POST",
+    () {
+      test(
+        "Should call post with correct values",
+        () async {
+          final client = ClientSpy();
+          final sut = HttpAdapter(client);
+          final url = faker.internet.httpUrl();
 
-      await sut.request(url: url, method: 'post');
+          await sut.request(url: url, method: 'post');
 
-      verify(client.post(url));
-    });
-  });
+          verify(
+            client.post(
+              url,
+              headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json',
+              },
+            ),
+          );
+        },
+      );
+    },
+  );
 }
