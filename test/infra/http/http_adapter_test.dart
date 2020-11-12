@@ -1,8 +1,8 @@
 import 'package:faker/faker.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:meta/meta.dart';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
 class ClientSpy extends Mock implements Client {}
@@ -21,16 +21,20 @@ class HttpAdapter {
 }
 
 void main() {
+  HttpAdapter sut;
+  ClientSpy client;
+  String url;
+  setUp(() {
+    client = ClientSpy();
+    sut = HttpAdapter(client);
+    url = faker.internet.httpUrl();
+  });
   group(
     "POST",
     () {
       test(
         "Should call post with correct values",
         () async {
-          final client = ClientSpy();
-          final sut = HttpAdapter(client);
-          final url = faker.internet.httpUrl();
-
           await sut.request(url: url, method: 'post');
 
           verify(
