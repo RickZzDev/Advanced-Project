@@ -29,6 +29,15 @@ void main() {
   test(
     "Should call httpClient with corect values",
     () async {
+      final accessToken = faker.guid.guid();
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async =>
+          {"accessToken": accessToken, "name": faker.person.name()});
       //Action
       //Chamando o auth
       await sut.auth(params);
@@ -128,6 +137,28 @@ void main() {
       //Assert
       //Verifica se foi lançado um domain error
       expect(future, throwsA(DomainError.unexpectedError));
+    },
+  );
+  test(
+    "Should return an AccountEntity if htppClient return 200",
+    () async {
+      final accessToken = faker.guid.guid();
+      //O when será ativado justamente quando o request for chamado
+      //Após ele ser chamado, será lançado um HttpError
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async =>
+          {"accessToken": accessToken, "name": faker.person.name()});
+      //Action
+      //Chamando o auth
+      final account = await sut.auth(params);
+      //Assert
+      //Verifica se foi lançado um domain error
+      expect(account.token, accessToken);
     },
   );
 }
