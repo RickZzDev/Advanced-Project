@@ -89,4 +89,45 @@ void main() {
       expect(future, throwsA(DomainError.unexpectedError));
     },
   );
+  test(
+    "Should throw invalid credentials error if HttpClient returns 401",
+    () async {
+      //O when será ativado justamente quando o request for chamado
+      //Após ele ser chamado, será lançado um HttpError
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenThrow(HttpError.unauthorized);
+      //Action
+      //Chamando o auth
+      final future = sut.auth(params);
+      //Assert
+      //Verifica se foi lançado um domain error
+      expect(future, throwsA(DomainError.invalidCredentials));
+    },
+  );
+
+  test(
+    "Should throw unexpected error if HttpClient returns 500",
+    () async {
+      //O when será ativado justamente quando o request for chamado
+      //Após ele ser chamado, será lançado um HttpError
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenThrow(HttpError.serverError);
+      //Action
+      //Chamando o auth
+      final future = sut.auth(params);
+      //Assert
+      //Verifica se foi lançado um domain error
+      expect(future, throwsA(DomainError.unexpectedError));
+    },
+  );
 }
