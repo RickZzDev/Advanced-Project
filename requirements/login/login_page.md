@@ -14,7 +14,7 @@
 10. Habilidat o botão de fazer login se todos os campos forem válidos ||CHECK||
 11. Desabilitar o botão de fazer login se a lgum campo for inválido ||CHECK||
 12. Exibir loading no início da ação de login
-13. Autenticar o usuário com email e senha informados no formulário
+13. Autenticar o usuário com email e senha informados no formulário ||CHECK||
 14. Exibir mensagem de erro caso o login falhe
 15. Gravar o toke do usuário para a tela de lista de enquetes
 16. Redirecionar o usuario para lista de enquetes
