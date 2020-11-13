@@ -1,14 +1,25 @@
-import 'package:advancedProject/ui/pages/login_page.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+
+import 'package:advancedProject/ui/pages/pages.dart';
+
+class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
+  LoginPresenter presenter;
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = LoginPresenterSpy();
+    final loginPage = MaterialApp(home: LoginPage(presenter));
+    await tester.pumpWidget(loginPage);
+  }
+
   testWidgets(
     "Should load with correct initial state",
     (WidgetTester tester) async {
-      //ARRANGE
-      final loginPage = MaterialApp(home: LoginPage());
-      await tester.pumpWidget(loginPage);
+      await loadPage(tester);
 
       //EXPECT
 
@@ -31,6 +42,25 @@ void main() {
 
       final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
       expect(button.onPressed, null);
+    },
+  );
+
+  testWidgets(
+    "Should call validate with correct values",
+    (WidgetTester tester) async {
+      await loadPage(tester);
+      //Criando texto de email fake
+      final emailTxt = faker.internet.email();
+      //Procurando o form de email e injetando o texto criado acima
+      await tester.enterText(find.bySemanticsLabel("Email"), emailTxt);
+      //Verifica se o método do presenter foi chamado com o texto designado acima
+      verify(presenter.validateEmail(emailTxt));
+
+      final senhaTxt = faker.internet.password();
+      //Procurando o form de senha e injetando o texto criado acima
+      await tester.enterText(find.bySemanticsLabel("Senha"), senhaTxt);
+      //Verifica se o método do presenter foi chamado com o texto designado acima
+      verify(presenter.validatePassword(senhaTxt));
     },
   );
 }
