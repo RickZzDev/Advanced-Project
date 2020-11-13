@@ -4,7 +4,7 @@
 
 1. Os campos devem começar sem exibir mensagem de erro ||CHECK||
 2. o botão de fazer login deve começar desabilitado  ||CHECK||
-3. Após digitar algom em um campo, a mensagem de erro só deve sumir se o campo for válido
+3. Após digitar algom em um campo, a mensagem de erro só deve sumir se o campo for válido ||CHECK||
 4. Validar email quando o usuartio digitar o campo ||CHECK||
 5. Mostrar mensagemde erro se o email for inválido ||CHECK||
 6. Remover mensagem de erro se o email for válido
