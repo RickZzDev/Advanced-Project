@@ -10,4 +10,6 @@ abstract class LoginPresenter {
   void validatePassword(String pasword);
 
   void auth();
+
+  void dispose();
 }
