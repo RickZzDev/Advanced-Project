@@ -41,20 +41,27 @@ class LoginPage extends StatelessWidget {
                             keyboardType: TextInputType.emailAddress,
                           );
                         }),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8, bottom: 32),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Senha",
-                          icon: Icon(
-                            Icons.lock,
-                            color: Theme.of(context).primaryColorLight,
-                          ),
-                        ),
-                        onChanged: presenter.validatePassword,
-                        obscureText: true,
-                      ),
-                    ),
+                    StreamBuilder<String>(
+                        stream: presenter.passwordErrorStream,
+                        builder: (context, snapshot) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: 8, bottom: 32),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: "Senha",
+                                errorText: snapshot.data?.isEmpty == true
+                                    ? null
+                                    : snapshot.data,
+                                icon: Icon(
+                                  Icons.lock,
+                                  color: Theme.of(context).primaryColorLight,
+                                ),
+                              ),
+                              onChanged: presenter.validatePassword,
+                              obscureText: true,
+                            ),
+                          );
+                        }),
                     RaisedButton(
                       onPressed: null,
                       child: Text("Entrar".toUpperCase()),

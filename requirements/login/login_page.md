@@ -7,10 +7,10 @@
 3. Após digitar algom em um campo, a mensagem de erro só deve sumir se o campo for válido ||CHECK||
 4. Validar email quando o usuartio digitar o campo ||CHECK||
 5. Mostrar mensagemde erro se o email for inválido ||CHECK||
-6. Remover mensagem de erro se o email for válido
+6. Remover mensagem de erro se o email for válido  ||CHECK||
 7. Validar senha quando o usuário digitar no campo ||CHECK||
-8. Mostrar mensagem de erro se a senah for inválida
-9. Remover mensagem de erro se a senah for válida
+8. Mostrar mensagem de erro se a senah for inválida  ||CHECK||
+9. Remover mensagem de erro se a senah for válida ||CHECK||
 10. Habilidat o botão de fazer login se todos os campos forem válidos
 11. Desabilitar o botão de fazer login se a lgum campo for inválido
 12. Exibir loading no início da ação de login
