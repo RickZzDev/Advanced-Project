@@ -3,5 +3,5 @@ import 'package:advancedProject/ui/pages/login/login_page.dart';
 import 'package:flutter/cupertino.dart';
 
 Widget makeLoginPage() {
-  LoginPage(makeLoginPresenter());
+  return LoginPage(makeGetXLoginPresenter());
 }

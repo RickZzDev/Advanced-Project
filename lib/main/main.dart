@@ -22,7 +22,6 @@ class App extends StatelessWidget {
       title: "Advanced",
       debugShowCheckedModeBanner: false,
       theme: makeAppTheme(),
-      home: LoginPage(null),
     );
   }
 }

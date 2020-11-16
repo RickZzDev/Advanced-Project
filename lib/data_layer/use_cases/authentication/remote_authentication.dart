@@ -2,12 +2,12 @@
 
 import 'package:meta/meta.dart';
 
-import '../http/http_client.dart';
-import '../../domain/usecases/usecases.dart';
-import '../../data_layer/http/http.dart';
-import '../../domain/helpers/helpers.dart';
-import '../../domain/entities/entities.dart';
-import '../../data_layer/models/models.dart';
+import '../../http/http_client.dart';
+import '../../../domain/usecases/usecases.dart';
+import '../../http/http.dart';
+import '../../../domain/helpers/helpers.dart';
+import '../../../domain/entities/entities.dart';
+import '../../models/models.dart';
 
 class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;

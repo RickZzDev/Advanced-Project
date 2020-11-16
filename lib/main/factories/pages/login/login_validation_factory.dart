@@ -1,3 +1,4 @@
+import 'package:advancedProject/main/builders/builders.dart';
 import 'package:advancedProject/presentation/protocols/protocols.dart';
 import 'package:advancedProject/validation/protocols/field_validation.dart';
 import 'package:advancedProject/validation/validators/required_field_validation.dart';
@@ -14,8 +15,7 @@ Validation makeLoginValidation() {
 
 List<FieldValidation> makeLoginValidations() {
   return [
-    RequiredFieldValidation('email'),
-    EmailValidation('email'),
-    RequiredFieldValidation('password')
+    ...ValidationBuilder.field('email').required().email().build(),
+    ...ValidationBuilder.field('password').required().build()
   ];
 }
