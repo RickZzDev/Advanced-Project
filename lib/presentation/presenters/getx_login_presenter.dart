@@ -1,4 +1,5 @@
 import 'package:advancedProject/domain/helpers/domain_error.dart';
+import 'package:advancedProject/domain/usecases/save_current_account.dart';
 import 'package:advancedProject/ui/pages/login/login_presenter.dart';
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
@@ -11,10 +12,12 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   final Authentication authentication;
   String _email;
   String _password;
+  final SaveCurrentAccount saveCurrentAccount;
 
   var _emailError = RxString();
   var _passwordError = RxString();
   var _mainError = RxString();
+  var _navigateTo = RxString();
   var _isFormValid = false.obs;
   var _isLoading = false.obs;
 
@@ -26,10 +29,14 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
 
   Stream<String> get mainErrorStream => _mainError.stream;
 
+  Stream<String> get navigateToStream => _navigateTo.stream;
+
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   GetXLoginPresenter(
-      {@required this.validation, @required this.authentication});
+      {@required this.validation,
+      @required this.authentication,
+      @required this.saveCurrentAccount});
 
   void validateEmail(String email) {
     _email = email;
@@ -55,13 +62,15 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
     _isLoading.value = true;
 
     try {
-      await authentication
+      _isLoading.value = true;
+      final account = await authentication
           .auth(AuthenticationParams(email: _email, secret: _password));
+      await saveCurrentAccount.save(account);
+      _navigateTo.value = '/surveys';
     } on DomainError catch (e) {
       _mainError.value = e.description;
+      _isLoading.value = false;
     }
-
-    _isLoading.value = false;
   }
 
   void dispose() {}

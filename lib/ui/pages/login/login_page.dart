@@ -1,6 +1,7 @@
 import 'package:advancedProject/ui/pages/login/components/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/components.dart';
@@ -48,6 +49,14 @@ class _LoginPageState extends State<LoginPage> {
             (error) {
               if (error != null) {
                 showErroMessage(context, error);
+              }
+            },
+          );
+
+          widget.presenter.navigateToStream.listen(
+            (page) {
+              if (page?.isNotEmpty == true) {
+                Get.offAllNamed(page);
               }
             },
           );
