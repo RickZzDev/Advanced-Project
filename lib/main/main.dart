@@ -1,7 +1,28 @@
+import 'package:advancedProject/main/factories/pages/login/login_page_factory.dart';
+import 'package:advancedProject/ui/components/components.dart';
+import 'package:advancedProject/ui/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
-
-import '../ui/components/app.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(App());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      initialRoute: '/login',
+      getPages: [
+        GetPage(
+          name: "/login",
+          page: makeLoginPage,
+        )
+      ],
+      title: "Advanced",
+      debugShowCheckedModeBanner: false,
+      theme: makeAppTheme(),
+      home: LoginPage(null),
+    );
+  }
 }
