@@ -19,6 +19,7 @@ dependencies:
   provider:
   get:
   equatable:
+  flutter_secure_storage:
 
 dev_dependencies:
   flutter_test:
